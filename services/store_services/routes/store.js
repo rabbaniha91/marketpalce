@@ -12,13 +12,13 @@ router.get("/get/:id");
 router.get("/get_all");
 
 // check the user is authenticated
-router.use(authenticate);
+// router.use(authenticate);
 
 // add a store
 router.post("/add");
 
 // check is seller
-router.use(isSeller);
+// router.use(isSeller);
 
 // get users store
 router.get("/my_stores");

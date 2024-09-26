@@ -9,7 +9,7 @@ router.post("/register");
 router.post("/login");
 
 // private routes
-router.use(authenticate);
+// router.use(authenticate);
 
 // fetch user details
 router.get("/get_user");

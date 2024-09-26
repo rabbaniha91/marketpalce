@@ -15,7 +15,7 @@ router.get("/get_all");
 router.get('/reviews')
 
 // check the user be a seller
-router.use(isSeller);
+// router.use(isSeller);
 
 // add products
 router.post("/add");

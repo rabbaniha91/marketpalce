@@ -1,12 +1,11 @@
-const express = require('express')
+const express = require("express");
+require("dotenv").config({path: '../../.env'});
 
+const app = express();
+const PORT = process.env.PAYMENT_SERVICE_PORT;
 
-const app = express()
+// app.use(authenticate);
 
-app.use(authenticate)
-
-
-
-app.listen(3000, () => {
-    console.log(`server run on port 3000`)
-})
+app.listen(PORT, () => {
+  console.log(`Payment service run on port ${PORT}`);
+});
