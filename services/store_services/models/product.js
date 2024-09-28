@@ -14,6 +14,7 @@ const productSchema = mongoose.Schema(
     ratings: [{ user: { type: mongoose.Types.ObjectId, ref: "User" }, rate: { type: Number, default: 0 } }],
     numberOfSales: { type: Number, default: 0 },
     store: { type: mongoose.Types.ObjectId, ref: "Store" },
+    reviwes: [{ user: { type: mongoose.Types.ObjectId, ref: "User", text: { type: String } } }],
   },
   { timestamps: true }
 );
