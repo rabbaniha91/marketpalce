@@ -6,12 +6,13 @@ const { dBConnected } = require("../../configs/dbConnect.js");
 const authRouter = require("./routes/user");
 const cartRouter = require("./routes/shopoingCart");
 const { uncaughError, unhandledError, globalErrorHandler } = require("../../configs/errorController.js");
+const { userServicesPort, mongoURL } = require("../../configs/env_vars.js");
 const service = "user";
 uncaughError(service);
 
 const app = express();
-const PORT = process.env.USER_SERVICE_PORT;
-const dbURL = process.env.MONGO_URL;
+const PORT = userServicesPort;
+const dbURL = mongoURL;
 
 app.use(express.json());
 
