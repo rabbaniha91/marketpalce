@@ -1,12 +1,12 @@
 const express = require("express");
 const userController = require("../controllers/user");
-const { registerValidator } = require("../validators");
+const { authValidator } = require("../validators");
 const passport = require("../external_auth/passport");
 
 const router = express.Router();
 
 // create new user
-router.post("/register", registerValidator(), userController.register);
+router.post("/register", authValidator(), userController.register);
 
 // google auth
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
@@ -15,7 +15,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 router.get("/google/callback", passport.authenticate("google", { session: false }), userController.googleAuthCB);
 
 // login
-router.post("/login");
+router.post("/login", authValidator(), userController.login);
 
 // private routes
 // router.use(authenticate);

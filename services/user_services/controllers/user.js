@@ -9,12 +9,12 @@ const { User } = require("../database/user");
 const { Notification } = require("../database/notification");
 const { createToken } = require("../../../configs/createJWT");
 const { secretAccessToken, secretRefreshToken } = require("../../../configs/env_vars");
+const { setCookie } = require("../utils");
 
 class userController {
   // register users with email and password
   static register = catchFunc(async (req, res, next) => {
     try {
-      await UserModel.deleteMany();
       const { email, password } = req.body;
 
       //   validate user requests with express validator
@@ -59,37 +59,21 @@ class userController {
     }
   });
 
-  static async googleAuthCB(req, res, next) {
+  // auht with google oauth2 callback url
+  static googleAuthCB = catchFunc(async (req, res, next) => {
     try {
+      // get user from passport
       const user = req.user;
+      // get cookies
       const cookies = req.cookies;
+
+      //   create tokens
       const newRefreshToken = createToken(user._id, secretRefreshToken, "15d");
       const accessToken = createToken(user._id, secretAccessToken, "2h");
 
-      let newRefreshTokenArray = !cookies?.jwt
-        ? user?.refreshTokens
-        : user?.refreshTokens.filter((token) => {
-            return token !== cookies?.jwt;
-          });
+      //   set cookie
+      await setCookie(cookies, user, User, newRefreshToken, res);
 
-      if (cookies?.jwt) {
-        const foundUserWithToken = await User.getUserByToken(cookies?.jwt);
-        if (!foundUserWithToken) newRefreshTokenArray = [];
-        res.clearCookie("jwt", {
-          httpOnly: true,
-          sameSite: "None",
-          secure: true,
-        });
-      }
-
-      user.refreshTokens = [...newRefreshTokenArray, newRefreshToken];
-      res.cookie("jwt", newRefreshToken, {
-        httpOnly: true,
-        sameSite: "None",
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 15,
-      });
-      await user.save();
       res.status(200).json({
         message: "Authentication was successful",
         user,
@@ -98,7 +82,41 @@ class userController {
     } catch (error) {
       return next(new AppError(error.message, 500));
     }
-  }
+  });
+
+  //   login
+  static login = catchFunc(async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      const cookies = req.cookies;
+      //   validate user requests with express validator
+      const validateResult = validationResult(req);
+
+      if (!validateResult.isEmpty()) {
+        return next(new AppError(validateResult.array()[0].msg, 400));
+      }
+
+      const user = await User.getUserByEmail(email);
+      if (!user) next(new AppError("User not found", 404));
+
+      const correctPass = await bcrypt.compare(password, user.password);
+
+      if (!correctPass) next(new AppError("Incorrect password", 401));
+
+      const newRefreshToken = createToken(user._id, secretRefreshToken, "15d");
+      const accessToken = createToken(user._id, secretAccessToken, "2h");
+
+      await setCookie(cookies, user, User, newRefreshToken, res);
+
+      res.status(200).json({
+        message: "User successfuly authenticated",
+        user,
+        accessToken,
+      });
+    } catch (error) {
+      return next(new AppError(error.message, 500));
+    }
+  });
 }
 
 module.exports = userController;
