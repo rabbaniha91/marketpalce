@@ -1,9 +1,11 @@
 const express = require("express");
+const userController = require("../controllers/user");
+const { registerValidator } = require("../validators");
 
 const router = express.Router();
 
 // create new user
-router.post("/register");
+router.post("/register", registerValidator(), userController.register);
 
 // login
 router.post("/login");
@@ -36,10 +38,10 @@ router.patch("/update_password");
 router.post("/forgot_password");
 
 // get orders history
-router.get('/orders/:userId')
+router.get("/orders/:userId");
 
 // become a seller
-router.patch('/become_seller')
+router.patch("/become_seller");
 
 // delete user
 router.delete("/delete_user");

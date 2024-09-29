@@ -17,3 +17,5 @@ class User {
     return await UserModel.findOne({ username });
   }
 }
+
+module.exports = { User };

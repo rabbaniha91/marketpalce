@@ -24,9 +24,10 @@ const handleEntityParseFailed = () => {
 };
 
 const sendErrorDev = (err, res) => {
+  console.error(err.message, err.status + "😢");
   res.status(err.statusCode).json({
     status: err.status,
-    error: err,
+    statusCode: err.statusCode,
     message: err.message + "❤️",
     stack: err.stack,
   });

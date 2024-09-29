@@ -4,7 +4,6 @@ const userSchema = mongoose.Schema(
   {
     firstname: { type: String },
     lastname: { type: String },
-    username: { type: String, required: true, unique: true },
     email: { type: String, unique: true },
     verfiedEmail: { type: Boolean, required: true, default: false },
     phone: { type: String, unique: true },
@@ -21,6 +20,7 @@ const userSchema = mongoose.Schema(
     hasStore: { type: Boolean, default: false },
     stores: [{ type: mongoose.Types.ObjectId, ref: "Store" }],
     favorites: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
+    refreshTOkens: [String],
   },
   { timestamps: true }
 );
