@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config({path: '../../.env'});
 
-const { dBConnected } = require("../../database/congfig");
+const { dBConnected } = require("../../configs/dbConnect.js");
 
 
 const app = express();
