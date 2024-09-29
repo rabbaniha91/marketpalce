@@ -5,6 +5,9 @@ const { dBConnected } = require("../../configs/dbConnect.js");
 
 const productRouter = require("./routes/products");
 const storeRouter = require("./routes/store");
+const { uncaughError, unhandledError } = require("../../configs/errorController.js");
+const service = "store";
+uncaughError(service);
 
 const app = express();
 const PORT = process.env.STORE_SERVICE_PORT;
@@ -15,7 +18,9 @@ app.use("/api/v1/product", productRouter);
 
 dBConnected(dbURL).then(() => {
   console.log(`Store serivce successfuly connect to db ...`);
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Store service run on port ${PORT}...`);
   });
+
+  unhandledError(server, service);
 });

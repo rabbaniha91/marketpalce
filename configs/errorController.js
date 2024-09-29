@@ -2,7 +2,7 @@ const AppError = require("./AppError");
 
 const uncaughError = (service) => {
   process.on("uncaughtException", (err) => {
-    console.log(`UNCAUGH EXCEPTION in ${service} Shuting down ...`);
+    console.log(`UNCAUGH EXCEPTION in ${service} services Shuting down ...`);
     console.log(err.name + " " + err.message);
     process.exit(1);
   });
@@ -10,7 +10,7 @@ const uncaughError = (service) => {
 
 const unhandledError = (server, service) => {
   process.on("unhandledRejection", (err) => {
-    console.log(`Unhandled Rejection in ${service} shuting down ...`);
+    console.log(`Unhandled Rejection in ${service} services shuting down ...`);
     console.log(err.name + " " + err.message);
     server.close(() => {
       process.exit(1);
