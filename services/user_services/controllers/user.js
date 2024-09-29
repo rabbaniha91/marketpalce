@@ -58,6 +58,47 @@ class userController {
       next(new AppError(error.message, 500));
     }
   });
+
+  static async googleAuthCB(req, res, next) {
+    try {
+      const user = req.user;
+      const cookies = req.cookies;
+      const newRefreshToken = createToken(user._id, secretRefreshToken, "15d");
+      const accessToken = createToken(user._id, secretAccessToken, "2h");
+
+      let newRefreshTokenArray = !cookies?.jwt
+        ? user?.refreshTokens
+        : user?.refreshTokens.filter((token) => {
+            return token !== cookies?.jwt;
+          });
+
+      if (cookies?.jwt) {
+        const foundUserWithToken = await User.getUserByToken(cookies?.jwt);
+        if (!foundUserWithToken) newRefreshTokenArray = [];
+        res.clearCookie("jwt", {
+          httpOnly: true,
+          sameSite: "None",
+          secure: true,
+        });
+      }
+
+      user.refreshTokens = [...newRefreshTokenArray, newRefreshToken];
+      res.cookie("jwt", newRefreshToken, {
+        httpOnly: true,
+        sameSite: "None",
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 15,
+      });
+      await user.save();
+      res.status(200).json({
+        message: "Authentication was successful",
+        user,
+        accessToken,
+      });
+    } catch (error) {
+      return next(new AppError(error.message, 500));
+    }
+  }
 }
 
 module.exports = userController;

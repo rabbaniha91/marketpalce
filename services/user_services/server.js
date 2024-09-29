@@ -1,7 +1,9 @@
 const express = require("express");
 require("dotenv").config({ path: "../../.env" });
+const cookieParser = require("cookie-parser");
 
 const { dBConnected } = require("../../configs/dbConnect.js");
+const passport = require("./external_auth/passport.js");
 
 const authRouter = require("./routes/user");
 const cartRouter = require("./routes/shopoingCart");
@@ -14,7 +16,9 @@ const app = express();
 const PORT = userServicesPort;
 const dbURL = mongoURL;
 
+app.use(passport.initialize());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/cart", cartRouter);

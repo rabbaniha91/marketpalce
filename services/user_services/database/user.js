@@ -16,6 +16,9 @@ class User {
   static async getUserByUsername(username) {
     return await UserModel.findOne({ username });
   }
+  static async getUserByToken(token) {
+    return await UserModel.findOne({ refreshTokens: token });
+  }
 }
 
 module.exports = { User };

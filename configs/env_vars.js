@@ -5,4 +5,6 @@ module.exports = {
   mongoURL: process.env.MONGO_URL,
   secretRefreshToken: process.env.REFRESH_TOKEN_SECRET,
   secretAccessToken: process.env.ACCESS_TOKEN_SECRET,
+  googleClientId: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
 };
