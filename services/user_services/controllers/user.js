@@ -6,6 +6,7 @@ const UserModel = require("../models/user");
 const AppError = require("../../../configs/AppError");
 const catchFunc = require("../../../configs/catchFunc");
 const { User } = require("../database/user");
+const { Notification } = require("../database/notification");
 const { createToken } = require("../../../configs/createJWT");
 const { secretAccessToken, secretRefreshToken } = require("../../../configs/env_vars");
 
@@ -13,6 +14,7 @@ class userController {
   // register users with email and password
   static register = catchFunc(async (req, res, next) => {
     try {
+      await UserModel.deleteMany();
       const { email, password } = req.body;
 
       //   validate user requests with express validator
@@ -42,11 +44,15 @@ class userController {
       user.refreshTokens.push(refreshToken);
       await user.save();
 
+      //   create email verify notification
+      const notif = await Notification.send("لطفا آدرس ایمیل خود را تائید نمائید.", user._id);
+
       //   send response
       res.status(201).json({
         message: "User successfuly created",
         user,
         accessToken,
+        notif,
       });
     } catch (error) {
       next(new AppError(error.message, 500));
