@@ -9,7 +9,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm run start --prefix services/user_services\" \"npm run start --prefix services/store_services\" \"npm run start --prefix services/payment_services\""
+    "watch": "concurrently \"npm run start:dev --prefix services/user_services\" \"npm run start:dev --prefix services/store_services\" \"npm run start:dev --prefix services/payment_services\"",
+    "start": "concurrently \"npm run start:prod --prefix services/user_services\" \"npm run start:prod --prefix services/store_services\" \"npm run start:prod --prefix services/payment_services\""
   },
   "keywords": [],
   "author": "",

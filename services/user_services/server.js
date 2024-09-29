@@ -3,6 +3,8 @@ require("dotenv").config({ path: "../../.env" });
 
 const { dBConnected } = require("../../configs/dbConnect.js");
 
+console.log("Envierment: ", process.env.NODE_ENV);
+
 const authRouter = require("./routes/user");
 const cartRouter = require("./routes/shopoingCart");
 
