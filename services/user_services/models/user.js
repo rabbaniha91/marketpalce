@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema(
     hasStore: { type: Boolean, default: false },
     stores: [{ type: mongoose.Types.ObjectId, ref: "Store" }],
     favorites: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
-    refreshTOkens: [String],
+    refreshTokens: [String],
   },
   { timestamps: true }
 );
