@@ -12,7 +12,7 @@ router.post("/login");
 // router.use(authenticate);
 
 // fetch user details
-router.get("/get_user");
+router.get("/get_user/:id");
 
 // add and change profile picture
 router.patch("/profile_picture");
