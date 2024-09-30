@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
-const { validationResult } = require("express-validator");
-
-const UserModel = require("../models/user");
+const { validationResult, cookie } = require("express-validator");
+const JWT = require("jsonwebtoken");
 
 const AppError = require("../../../configs/AppError");
 const catchFunc = require("../../../configs/catchFunc");
@@ -41,8 +40,7 @@ class userController {
       //   crate necessary tokens
       const refreshToken = createToken(user._id, secretRefreshToken, "15d");
       const accessToken = createToken(user._id, secretAccessToken, "2h");
-      user.refreshTokens.push(refreshToken);
-      await user.save();
+      await setCookie(cookie, user, User, refreshToken, res);
 
       //   create email verify notification
       const notif = await Notification.send("لطفا آدرس ایمیل خود را تائید نمائید.", user._id);
@@ -102,14 +100,18 @@ class userController {
       } else if (phone) {
         user = await User.getUserByPhone(phone);
       } else {
-        next(new AppError("Email or Phone is required", 401));
+        return next(new AppError("Email or Phone is required", 401));
       }
 
-      if (!user) next(new AppError("User not found", 404));
+      if (!user) return next(new AppError("User not found", 404));
+
+      if (!user.password) {
+        return next(new AppError("User dont set password", 400));
+      }
 
       const correctPass = await bcrypt.compare(password, user.password);
 
-      if (!correctPass) next(new AppError("Incorrect password", 401));
+      if (!correctPass) return next(new AppError("Incorrect password", 401));
 
       const newRefreshToken = createToken(user._id, secretRefreshToken, "15d");
       const accessToken = createToken(user._id, secretAccessToken, "2h");
@@ -120,6 +122,71 @@ class userController {
         message: "User successfuly authenticated",
         user,
         accessToken,
+      });
+    } catch (error) {
+      return next(new AppError(error.message, 500));
+    }
+  });
+
+  // generate new refresh token and access token to keep the user logged in
+  static generateRefreshToken = catchFunc(async (req, res, next) => {
+    try {
+      const cookies = req.cookies;
+      if (!cookies?.jwt) return next(new AppError("access forbidden, No cookie has been set", 403));
+      const refreshToken = cookies?.jwt;
+      res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
+
+      const user = await User.getUserByToken(refreshToken);
+
+      console.log(user);
+
+      if (!user) {
+        JWT.verify(refreshToken, secretRefreshToken, async (err, decoded) => {
+          if (err) return;
+          const hackedUser = await User.getUserById(decoded.id);
+          if (hackedUser) {
+            hackedUser.refreshTokens = [];
+            await hackedUser.save();
+          }
+        });
+
+        return next(new AppError("Access forbiden, user not found", 403));
+      }
+
+      const newRefreshTokenArray = user.refreshTokens.filter((rt) => {
+        return rt !== refreshToken;
+      });
+
+      JWT.verify(refreshToken, secretRefreshToken, async (err, decoded) => {
+        if (err) {
+          user.refreshTokens = [...newRefreshTokenArray];
+          await user.save();
+        }
+
+        if (err || user._id.toString() !== decoded.id) return next(new AppError("Access forbiden, incorrect token", 403));
+
+        const accessToken = createToken(decoded.id, secretAccessToken, "2h");
+        const newRefreshToken = createToken(decoded.id, secretRefreshToken, "15d");
+
+        user.refreshTokens = [...newRefreshTokenArray, newRefreshToken];
+        await user.save();
+
+        res.cookie("jwt", {
+          httpOnly: true,
+          sameSite: "None",
+          secure: true,
+          maxAge: 1000 * 60 * 60 * 24 * 15,
+        });
+
+        res.status(200).json({
+          message: "Success",
+          user: {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            picture: user.profilePicture,
+          },
+          accessToken,
+        });
       });
     } catch (error) {
       return next(new AppError(error.message, 500));

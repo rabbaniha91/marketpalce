@@ -9,8 +9,8 @@ const registerValidator = () => {
 
 const loginValidator = () => {
   return [
-    body("email").isEmail().withMessage("Invalid email address"),
-    body("phone").isMobilePhone("ir-IR").withMessage("Invalid phone number"),
+    body("email").optional().isEmail().withMessage("Invalid email address"),
+    body("phone").optional().isMobilePhone("ir-IR").withMessage("Invalid phone number"),
     body("password").notEmpty().withMessage("Password is required").isStrongPassword().withMessage("Weak passwprd"),
   ];
 };

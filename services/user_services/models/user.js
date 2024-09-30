@@ -4,9 +4,9 @@ const userSchema = mongoose.Schema(
   {
     firstname: { type: String },
     lastname: { type: String },
-    email: { type: String, unique: true },
+    email: { type: String },
     verfiedEmail: { type: Boolean, required: true, default: false },
-    phone: { type: String, unique: true },
+    phone: { type: String },
     verifiedPhone: { type: Boolean, required: true, default: false },
     password: { type: String },
     profilePicture: { type: String },

@@ -18,11 +18,11 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
 // login
 router.post("/login", loginValidator(), userController.login);
 
+// create new refresh token and access token
+router.get("/new_refresh_token", userController.generateRefreshToken);
+
 // private routes
 router.use(authenticate);
-
-// fetch user details
-router.get("/get_user");
 
 // add and change profile picture
 router.put("/update_user");
