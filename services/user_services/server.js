@@ -3,7 +3,7 @@ require("dotenv").config({ path: "../../.env" });
 const cookieParser = require("cookie-parser");
 
 const { dBConnected } = require("../../configs/dbConnect.js");
-const passport = require("./external_auth/passport.js");
+const passport = require("./middlewares/passport.js");
 
 const authRouter = require("./routes/user");
 const cartRouter = require("./routes/shopoingCart");

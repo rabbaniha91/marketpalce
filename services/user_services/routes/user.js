@@ -1,7 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/user");
 const { authValidator } = require("../validators");
-const passport = require("../external_auth/passport");
+const passport = require("../middlewares/passport");
 
 const router = express.Router();
 
@@ -21,22 +21,10 @@ router.post("/login", authValidator(), userController.login);
 // router.use(authenticate);
 
 // fetch user details
-router.get("/get_user/:id");
+router.get("/get_user");
 
 // add and change profile picture
-router.patch("/profile_picture");
-
-// change username
-router.patch("/update_username");
-
-// add address
-router.patch("/add_address");
-
-// edit address
-router.put("/edit_address/:id");
-
-// delete address
-router.delete("/delete_address/:id");
+router.put("/update_user");
 
 // change password
 router.patch("/update_password");
@@ -45,13 +33,28 @@ router.patch("/update_password");
 router.post("/forgot_password");
 
 // get orders history
-router.get("/orders/:userId");
+router.get("/orders");
+
+// get user favorites
+router.get("/favorites");
 
 // become a seller
 router.patch("/become_seller");
 
+// gets user stores
+router.get("/stores");
+
 // delete user
 router.delete("/delete_user");
+
+// add address
+router.post("/add_address");
+
+// edit address
+router.put("/edit_address/:id");
+
+// delete address
+router.delete("/delete_address/:id");
 
 // logout
 router.get("/logout");
