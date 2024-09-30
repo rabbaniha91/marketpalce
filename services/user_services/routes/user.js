@@ -1,13 +1,13 @@
 const express = require("express");
 const userController = require("../controllers/user");
-const { authValidator } = require("../validators");
+const { registerValidator, loginValidator } = require("../validators");
 const passport = require("../middlewares/passport");
 const { authenticate } = require("../middlewares/verifyJWT");
 
 const router = express.Router();
 
 // create new user
-router.post("/register", authValidator(), userController.register);
+router.post("/register", registerValidator(), userController.register);
 
 // google auth
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
@@ -16,7 +16,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 router.get("/google/callback", passport.authenticate("google", { session: false }), userController.googleAuthCB);
 
 // login
-router.post("/login", authValidator(), userController.login);
+router.post("/login", loginValidator(), userController.login);
 
 // private routes
 router.use(authenticate);

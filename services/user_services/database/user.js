@@ -10,6 +10,10 @@ class User {
   static async getUserByEmail(email) {
     return await UserModel.findOne({ email });
   }
+
+  static async getUserById(id) {
+    return await UserModel.findById(id);
+  }
   static async getUserByPhone(phone) {
     return await UserModel.findOne({ phone });
   }

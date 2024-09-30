@@ -87,7 +87,7 @@ class userController {
   //   login
   static login = catchFunc(async (req, res, next) => {
     try {
-      const { email, password } = req.body;
+      const { email, phone, password } = req.body;
       const cookies = req.cookies;
       //   validate user requests with express validator
       const validateResult = validationResult(req);
@@ -96,7 +96,15 @@ class userController {
         return next(new AppError(validateResult.array()[0].msg, 400));
       }
 
-      const user = await User.getUserByEmail(email);
+      let user;
+      if (email) {
+        user = await User.getUserByEmail(email);
+      } else if (phone) {
+        user = await User.getUserByPhone(phone);
+      } else {
+        next(new AppError("Email or Phone is required", 401));
+      }
+
       if (!user) next(new AppError("User not found", 404));
 
       const correctPass = await bcrypt.compare(password, user.password);
