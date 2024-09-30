@@ -3,9 +3,10 @@ const AppError = require("../../../configs/AppError");
 const { secretAccessToken } = require("../../../configs/env_vars");
 
 const authenticate = async (req, res, next) => {
-  let accessToken = res.headers.authorization || res.headers.Authorization;
+ 
+  let accessToken = req.headers.authorization || req.headers.Authorization;
 
-  if (!accessToken.startsWith("Bearer ")) next(new AppError("Token has invalid format", 401));
+  if (!accessToken?.startsWith("Bearer ")) next(new AppError("Token has invalid format", 401));
 
   accessToken = accessToken.split(" ")[1];
 

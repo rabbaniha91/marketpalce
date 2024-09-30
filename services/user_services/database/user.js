@@ -23,13 +23,9 @@ class User {
   static async getUserByToken(token) {
     return await UserModel.findOne({ refreshTokens: token });
   }
-  static async updatePassword({ password, email, phone }) {
-    if (email) {
-      await UserModel.updateOne({ email }, { password });
-    } else if (phone) {
-      await UserModel.updateOne({ phone }, { password });
-    }
-    return true;
+  static async upddateUser(id, userInfo) {
+    await UserModel.findByIdAndUpdate(id, { ...userInfo });
+    return await UserModel.findById(id);
   }
 }
 

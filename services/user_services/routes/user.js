@@ -1,6 +1,6 @@
 const express = require("express");
 const userController = require("../controllers/user");
-const { registerValidator, loginValidator } = require("../validators");
+const { registerValidator, loginValidator, updateValidator } = require("../validators");
 const passport = require("../middlewares/passport");
 const { authenticate } = require("../middlewares/verifyJWT");
 
@@ -25,7 +25,7 @@ router.get("/new_refresh_token", userController.generateRefreshToken);
 router.use(authenticate);
 
 // add and change profile picture
-router.put("/update_user");
+router.put("/update_user", updateValidator(), userController.update);
 
 // change password
 router.patch("/update_password");

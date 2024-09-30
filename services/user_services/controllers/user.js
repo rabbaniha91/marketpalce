@@ -57,7 +57,7 @@ class userController {
     }
   });
 
-  // auht with google oauth2 callback url
+  // auht with google oauth20 callback url
   static googleAuthCB = catchFunc(async (req, res, next) => {
     try {
       // get user from passport
@@ -190,6 +190,41 @@ class userController {
       });
     } catch (error) {
       return next(new AppError(error.message, 500));
+    }
+  });
+
+  static update = catchFunc(async (req, res, next) => {
+    try {
+      const { firstname, lastname, birthDate } = req.body;
+      const { userId } = req;
+
+      const validateResult = validationResult(req);
+
+      if (!validateResult.isEmpty()) {
+        return next(new AppError(validateResult.array()[0].msg, 400));
+      }
+
+      let user = await User.getUserById(userId);
+      if (!user) {
+        return next(new AppError("Invalid information", 400));
+      }
+
+      user = await User.upddateUser(userId, { firstname, lastname, birthDate });
+
+      
+      res.status(200).json({
+        message: "Success",
+        user: {
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          phone: user.phone,
+          birthDate: user.birthDate,
+          picture: user.profilePicture,
+        },
+      });
+    } catch (error) {
+      next(new AppError(error.message, 500));
     }
   });
 }

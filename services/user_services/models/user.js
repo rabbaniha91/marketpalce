@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema(
     stores: [{ type: mongoose.Types.ObjectId, ref: "Store" }],
     favorites: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
     refreshTokens: [String],
+    birthDate: { type: Date },
   },
   { timestamps: true }
 );
