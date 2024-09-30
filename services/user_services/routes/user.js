@@ -2,6 +2,7 @@ const express = require("express");
 const userController = require("../controllers/user");
 const { authValidator } = require("../validators");
 const passport = require("../middlewares/passport");
+const { authenticate } = require("../middlewares/verifyJWT");
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get("/google/callback", passport.authenticate("google", { session: false 
 router.post("/login", authValidator(), userController.login);
 
 // private routes
-// router.use(authenticate);
+router.use(authenticate);
 
 // fetch user details
 router.get("/get_user");
