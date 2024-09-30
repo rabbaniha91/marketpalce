@@ -24,8 +24,7 @@ class User {
     return await UserModel.findOne({ refreshTokens: token });
   }
   static async upddateUser(id, userInfo) {
-    await UserModel.findByIdAndUpdate(id, { ...userInfo });
-    return await UserModel.findById(id);
+    return await UserModel.findByIdAndUpdate(id, { ...userInfo }, { new: true });
   }
 }
 
