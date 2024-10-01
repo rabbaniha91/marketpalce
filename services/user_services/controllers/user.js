@@ -146,6 +146,7 @@ class userController {
     }
   });
 
+  // add name, lastname and date of birth to user
   static update = catchFunc(async (req, res, next) => {
     try {
       const { firstname, lastname, birthDate } = req.body;
@@ -174,6 +175,25 @@ class userController {
           birthDate: user.birthDate,
           picture: user.profilePicture,
         },
+      });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
+
+  // update or add user password
+  static updatePassword = catchFunc(async (req, res, next) => {
+    try {
+      const { userId } = req;
+      const { password } = req.body;
+
+      const salt = await bcrypt.genSalt(10);
+      const hashed = await bcrypt.hash(password, salt);
+
+      await User.createPassword(userId, hashed);
+
+      res.json({
+        message: "Password updated",
       });
     } catch (error) {
       next(new AppError(error.message, 500));

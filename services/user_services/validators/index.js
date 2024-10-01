@@ -1,10 +1,7 @@
 const { body } = require("express-validator");
 
-const registerValidator = () => {
-  return [
-    body("email").notEmpty().withMessage("Email is required").isEmail().withMessage("Invalid email address"),
-    body("password").notEmpty().withMessage("Password is required").isStrongPassword().withMessage("Weak passwprd"),
-  ];
+const checkStrongPassword = () => {
+  return [body("password").notEmpty().withMessage("Password is required").isStrongPassword().withMessage("Weak passwprd")];
 };
 
 const loginValidator = () => {
@@ -19,8 +16,8 @@ const updateValidator = () => {
   return [
     body("firstname").optional().isLength({ min: 3 }).withMessage("First name must be at 3 characters"),
     body("lastname").optional().isLength({ min: 3 }).withMessage("Last name must be at 3 characters"),
-    body("birthDate").optional().isDate({ format: "YYYY-MM-DD" }).withMessage('Date not valid'),
+    body("birthDate").optional().isDate({ format: "YYYY-MM-DD" }).withMessage("Date not valid"),
   ];
 };
 
-module.exports = { registerValidator, loginValidator, updateValidator };
+module.exports = { checkStrongPassword, loginValidator, updateValidator };

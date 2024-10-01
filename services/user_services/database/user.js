@@ -1,3 +1,4 @@
+const AppError = require("../../../configs/AppError");
 const UserModel = require("../models/user");
 class User {
   static async createUser(user) {
@@ -25,6 +26,15 @@ class User {
   }
   static async upddateUser(id, userInfo) {
     return await UserModel.findByIdAndUpdate(id, { ...userInfo }, { new: true });
+  }
+
+  static async createPassword(id, password) {
+    try {
+      await UserModel.findByIdAndUpdate(id, { password });
+      return true;
+    } catch (error) {
+      new AppError(error.message, 500);
+    }
   }
 }
 

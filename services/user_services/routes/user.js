@@ -1,12 +1,10 @@
 const express = require("express");
 const userController = require("../controllers/user");
-const { registerValidator, loginValidator, updateValidator } = require("../validators");
+const { registerValidator, loginValidator, updateValidator, checkStrongPassword } = require("../validators");
 const passport = require("../middlewares/passport");
 const { authenticate } = require("../middlewares/verifyJWT");
 
 const router = express.Router();
-
-// create new user
 
 // google auth
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
@@ -15,13 +13,10 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 router.get("/google/callback", passport.authenticate("google", { session: false }), userController.googleAuthCB);
 
 // login
-// router.post("/login", loginValidator(), userController.login);
+router.post("/login", loginValidator(), userController.login);
 
 // create new refresh token and access token
 router.get("/new_refresh_token", userController.generateRefreshToken);
-
-// verify email address
-router.get("/email_verification/:token");
 
 // private routes
 router.use(authenticate);
@@ -30,7 +25,7 @@ router.use(authenticate);
 router.put("/update_user", updateValidator(), userController.update);
 
 // change password
-router.patch("/update_password");
+router.patch("/password", checkStrongPassword(), userController.updatePassword);
 
 // forgot password
 router.post("/forgot_password");
