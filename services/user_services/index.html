@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="uploadForm">
+      <input
+        type="file"
+        id="imageFile"
+      />
+      <button type="submit">آپلود</button>
+    </form>
+
+    <script>
+      const form = document.getElementById("uploadForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const fileInput = document.getElementById("imageFile");
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert("Please select a file");
+          return;
+        }
+
+        // تبدیل فایل به Blob
+        const blob = new Blob([file], { type: file.type });
+
+        // تبدیل Blob به ArrayBuffer
+        const arrayBuffer = await blob.arrayBuffer();
+
+        try {
+          const response = await fetch("/api/v1/auth/profile_picture", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/octet-stream",
+              "X-File-Type": file.type, // ارسال نوع فایل برای استفاده در سرور
+              authorization:
+                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmNlZjE1ZTNiMjYwZmI1NDRiOGQ3ZCIsImlhdCI6MTcyNzg3NzkzNywiZXhwIjoxNzI3ODg1MTM3fQ.ZN3l3-6lDsxbq3stDpGmECyk4Ellx4HJBvlmxxvXKuY",
+            },
+            body: arrayBuffer, // ارسال داده به صورت باینری
+          });
+
+          const result = await response.json();
+          console.log("Uploaded Image URL: ", result.url);
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
+      });
+    </script>
+  </body>
+</html>

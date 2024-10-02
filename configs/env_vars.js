@@ -8,6 +8,6 @@ module.exports = {
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
-  cloudinaryPublicKey: process.env.CLOUDINARY_PUBIC_KEY,
+  cloudinaryPublicKey: process.env.CLOUDINARY_PUBLIC_KEY,
   cloudinarySecretKey: process.env.CLOUDINARY_SECRET_KEY,
 };

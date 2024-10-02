@@ -1,6 +1,8 @@
+const path = require("path");
+
 const express = require("express");
 const userController = require("../controllers/user");
-const { registerValidator, loginValidator, updateValidator, checkStrongPassword } = require("../validators");
+const { loginValidator, updateValidator, checkStrongPassword } = require("../validators");
 const passport = require("../middlewares/passport");
 const { authenticate } = require("../middlewares/verifyJWT");
 
@@ -31,9 +33,6 @@ router.put("/update_user", updateValidator(), userController.update);
 // change password
 router.patch("/password", checkStrongPassword(), userController.updatePassword);
 
-// upadte profile picture
-router.patch("/profile_picture", userController.updateProfilePicture);
-
 // get orders history
 router.get("/orders");
 
@@ -60,5 +59,8 @@ router.delete("/delete_address/:id");
 
 // logout
 router.get("/logout");
+
+// upadte profile picture
+router.post("/profile_picture", userController.updateProfilePicture);
 
 module.exports = router;

@@ -44,6 +44,15 @@ class User {
       new AppError(error.message, 500);
     }
   }
+
+  static async updateProfilePicture(id, profilePicture) {
+    try {
+      await UserModel.findByIdAndUpdate(id, { profilePicture });
+      return true;
+    } catch (error) {
+      new AppError(error.message, 500);
+    }
+  }
 }
 
 module.exports = { User };

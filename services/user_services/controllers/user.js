@@ -11,6 +11,7 @@ const { Notification } = require("../database/notification");
 const { createToken } = require("../../../configs/createJWT");
 const { secretAccessToken, secretRefreshToken } = require("../../../configs/env_vars");
 const { setCookie } = require("../utils");
+const upload = require("../../../configs/cloudinary");
 
 class userController {
   // auht with google oauth20 callback url
@@ -230,6 +231,22 @@ class userController {
   static updateProfilePicture = catchFunc(async (req, res, next) => {
     try {
       const { userId } = req;
+      import("../../../middlewares/getFiles.mjs")
+        .then(async (module) => {
+          const pictureBuffer = await module.getFilesBuffer(req, res);
+          const url = await upload(pictureBuffer);
+          await User.updateProfilePicture(userId, url);
+          const notif = await Notification.send("تصویر پروفایل شما تغییر کرد.", userId);
+
+          res.json({
+            message: "Success",
+            url,
+            notif,
+          });
+        })
+        .catch((err) => {
+          throw new AppError(err.message, 500);
+        });
     } catch (error) {
       next(new AppError(error.message, 500));
     }

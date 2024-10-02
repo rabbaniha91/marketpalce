@@ -22,11 +22,13 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "file-type": "^19.5.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.6.3",
     "nodemailer": "^6.9.15",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "streamifier": "^0.1.1"
   },
   "devDependencies": {
     "lerna": "^8.1.8"
