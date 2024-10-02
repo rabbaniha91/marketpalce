@@ -7,10 +7,10 @@ const { authenticate } = require("../middlewares/verifyJWT");
 const router = express.Router();
 
 // google auth
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/google", passport.authenticate("google-auth", { scope: ["profile", "email"] }));
 
 // google auth callback
-router.get("/google/callback", passport.authenticate("google", { session: false }), userController.googleAuthCB);
+router.get("/google/callback", passport.authenticate("google-auth", { session: false }), userController.googleAuthCB);
 
 // login
 router.post("/login", loginValidator(), userController.login);
@@ -21,14 +21,18 @@ router.get("/new_refresh_token", userController.generateRefreshToken);
 // private routes
 router.use(authenticate);
 
+// change email
+router.get("/google-change", passport.authenticate("google-change", { scope: ["profile", "email"] }));
+router.get("/google-change/callback", passport.authenticate("google-change", { session: false }), userController.updateEmail);
+
 // add and change profile picture
 router.put("/update_user", updateValidator(), userController.update);
 
 // change password
 router.patch("/password", checkStrongPassword(), userController.updatePassword);
 
-// forgot password
-router.post("/forgot_password");
+// upadte profile picture
+router.patch("/profile_picture", userController.updateProfilePicture);
 
 // get orders history
 router.get("/orders");

@@ -7,4 +7,7 @@ module.exports = {
   secretAccessToken: process.env.ACCESS_TOKEN_SECRET,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudinaryPublicKey: process.env.CLOUDINARY_PUBIC_KEY,
+  cloudinarySecretKey: process.env.CLOUDINARY_SECRET_KEY,
 };

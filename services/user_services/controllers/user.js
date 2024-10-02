@@ -1,20 +1,30 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { validationResult, cookie } = require("express-validator");
 const JWT = require("jsonwebtoken");
+
+const UserModel = require("../models/user");
 
 const AppError = require("../../../configs/AppError");
 const catchFunc = require("../../../configs/catchFunc");
 const { User } = require("../database/user");
+const { Notification } = require("../database/notification");
 const { createToken } = require("../../../configs/createJWT");
-const { secretAccessToken, secretRefreshToken, emailVerify } = require("../../../configs/env_vars");
+const { secretAccessToken, secretRefreshToken } = require("../../../configs/env_vars");
 const { setCookie } = require("../utils");
 
 class userController {
   // auht with google oauth20 callback url
   static googleAuthCB = catchFunc(async (req, res, next) => {
     try {
+      // await UserModel.deleteMany({});
+
       // get user from passport
-      const user = req.user;
+      const { email } = req.user;
+
+      let user = await User.getUserByEmail(email);
+      if (!user) {
+        user = await User.createUser({ email, verfiedEmail: true });
+      }
       // get cookies
       const cookies = req.cookies;
 
@@ -195,6 +205,31 @@ class userController {
       res.json({
         message: "Password updated",
       });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
+
+  static updateEmail = catchFunc(async (req, res, next) => {
+    try {
+      const { email } = req.user;
+      const { userId } = req;
+
+      await User.changeEmail(userId, email);
+
+      const notif = await Notification.send("آدرس ایمیل با موفقیت تغییر کرد.", userId);
+      res.json({
+        message: "Success",
+        notif,
+      });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
+
+  static updateProfilePicture = catchFunc(async (req, res, next) => {
+    try {
+      const { userId } = req;
     } catch (error) {
       next(new AppError(error.message, 500));
     }

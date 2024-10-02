@@ -36,6 +36,14 @@ class User {
       new AppError(error.message, 500);
     }
   }
+  static async changeEmail(id, email) {
+    try {
+      await UserModel.findByIdAndUpdate(id, { email });
+      return true;
+    } catch (error) {
+      new AppError(error.message, 500);
+    }
+  }
 }
 
 module.exports = { User };
