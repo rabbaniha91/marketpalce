@@ -18,10 +18,6 @@ class Order {
       .populate({
         path: "transaction",
         select: "paymentMethod",
-      })
-      .populate({
-        path: "shippingAddress",
-        select: "province township city details",
       });
   }
 }

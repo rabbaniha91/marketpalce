@@ -324,11 +324,13 @@ class userController {
       const { province, township, city, details } = req.body;
 
       const newAddress = { user: userId, province, township, city, details };
+      console.log(newAddress);
 
-      const address = Address.addAddress(newAddress);
+      const address = await Address.addAddress(newAddress);
 
       res.json({
         message: "Success",
+        address,
       });
     } catch (error) {
       next(new AppError(error.message, 500));
@@ -340,17 +342,34 @@ class userController {
     try {
       const { id } = req.params;
       const editedaddress = req.body;
-      let address = await Address.getAddressById(id);
+      const address = await Address.editAddress(id, editedaddress);
 
-      if (!address) return next(new AppError("Address not found", 400));
-      address = { ...address, ...editedaddress };
-      await address.save();
+      if (!address) {
+        return next(new AppError("Address not found", 400));
+      }
       res.json({
         message: "Success",
         address,
       });
     } catch (error) {
       next(new AppError(error.message, 500));
+    }
+  });
+
+  // delete address
+  static deleteAddress = catchFunc(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await Address.deleteAddress(id);
+
+      if (!result) {
+        return next(new AppError("Address not found", 400));
+      }
+      res.json({
+        message: "Success",
+      });
+    } catch (error) {
+      next(error.message, 500);
     }
   });
 }

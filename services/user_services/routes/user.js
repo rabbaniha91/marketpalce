@@ -39,28 +39,25 @@ router.get("/orders", userController.orders);
 // get user favorites
 router.get("/favorites", userController.favorites);
 
+// upadte profile picture
+router.post("/profile_picture", userController.updateProfilePicture);
+
 // become a seller
 router.patch("/become_seller/:storeId", userController.addStore);
 
 // gets user stores
 router.get("/stores", userController.getStores);
 
-// delete user
-router.delete("/delete_user");
-
 // add address
-router.post("/add_address");
+router.post("/add_address", userController.addAddress);
 
 // edit address
-router.put("/edit_address/:id");
+router.put("/edit_address/:id", userController.editAddress);
 
 // delete address
-router.delete("/delete_address/:id");
+router.delete("/delete_address/:id", userController.deleteAddress);
 
 // logout
 router.get("/logout");
-
-// upadte profile picture
-router.post("/profile_picture", userController.updateProfilePicture);
 
 module.exports = router;

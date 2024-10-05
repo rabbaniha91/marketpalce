@@ -18,7 +18,7 @@ const orderSchema = mongoose.Schema(
     },
     transaction: { type: mongoose.Types.ObjectId, ref: "Transaction" },
     totalPrice: { type: Number, required: true },
-    shippingAddress: { type: mongoose.Types.ObjectId, ref: "Address" },
+    shippingAddress: { type: String, required: true },
   },
   { timestamps: true }
 );
