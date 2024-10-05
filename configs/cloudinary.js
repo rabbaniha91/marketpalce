@@ -9,18 +9,8 @@ cloudinary.config({
   secure: true,
 });
 
-// const upload = async (file) => {
-//   const result = await cloudinary.uploader(file);
 
-//   const url = cloudinary.url(result.public_id, {
-//     transformation: [
-//       { quality: "auto", fetch_format: "auto" },
-//       { crop: "fill", gravity: "auto" },
-//     ],
-//   });
 
-//   return url;
-// };
 
 const upload = (buffer) => {
   return new Promise((resolve, reject) => {

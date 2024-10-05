@@ -231,7 +231,7 @@ class userController {
   static updateProfilePicture = catchFunc(async (req, res, next) => {
     try {
       const { userId } = req;
-      import("../../../middlewares/getFiles.mjs")
+      import("../../../configd/getFilesFromClient.mjs")
         .then(async (module) => {
           const pictureBuffer = await module.getFilesBuffer(req, res);
           const url = await upload(pictureBuffer);

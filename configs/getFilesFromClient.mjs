@@ -1,5 +1,5 @@
 import { fileTypeFromBuffer } from "file-type";
-import AppError from "../configs/AppError.js";
+import AppError from "./AppError.js";
 
 export const getFilesBuffer = async (req, res) => {
   return new Promise((resolve, reject) => {
