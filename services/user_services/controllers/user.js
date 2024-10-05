@@ -12,6 +12,7 @@ const { createToken } = require("../../../configs/createJWT");
 const { secretAccessToken, secretRefreshToken } = require("../../../configs/env_vars");
 const { setCookie } = require("../utils");
 const upload = require("../../../configs/cloudinary");
+const Order = require("../database/order");
 
 class userController {
   // auht with google oauth20 callback url
@@ -228,6 +229,7 @@ class userController {
     }
   });
 
+  // upload and update profile picture
   static updateProfilePicture = catchFunc(async (req, res, next) => {
     try {
       const { userId } = req;
@@ -247,6 +249,20 @@ class userController {
         .catch((err) => {
           throw new AppError(err.message, 500);
         });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
+
+  // get users order history
+  static orders = catchFunc(async (req, res, next) => {
+    try {
+      const { userId } = req;
+      const orders = await Order.getAllOrders(userId);
+      res.json({
+        message: "Success",
+        orders,
+      });
     } catch (error) {
       next(new AppError(error.message, 500));
     }

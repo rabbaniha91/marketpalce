@@ -25,9 +25,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/cart", cartRouter);
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./index.html"));
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(path.join(__dirname, "./index.html"));
+// });
 
 app.use(globalErrorHandler);
 
