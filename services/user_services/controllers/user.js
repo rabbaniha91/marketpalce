@@ -295,6 +295,26 @@ class userController {
       next(new AppError(error.message, 500));
     }
   });
+
+  // get users store
+  static getStores = catchFunc(async (req, res, next) => {
+    try {
+      const { userId } = req;
+      const stores = await User.getStores(userId);
+      if (stores.length > 0) {
+        res.json({
+          message: "Success",
+          stores,
+        });
+      } else {
+        res.json({
+          message: "User has no stores",
+        });
+      }
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
 }
 
 module.exports = userController;

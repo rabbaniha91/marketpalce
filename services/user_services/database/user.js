@@ -59,6 +59,13 @@ class User {
       { new: true }
     );
   }
+
+  static async getStores(userId) {
+    return await UserModel.findById({ _id: userId }).select("stores").populate({
+      path: "stores",
+      select: "title logo createdAt",
+    });
+  }
 }
 
 module.exports = { User };
