@@ -6,6 +6,10 @@ class Address {
       ...address,
     }).save();
   }
+
+  static async getAddressById(id) {
+    return await AddressModel.findById(id);
+  }
 }
 
 module.exports = Address;

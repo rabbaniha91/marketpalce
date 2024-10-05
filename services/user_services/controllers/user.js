@@ -334,6 +334,25 @@ class userController {
       next(new AppError(error.message, 500));
     }
   });
+
+  // edit address
+  static editAddress = catchFunc(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const editedaddress = req.body;
+      let address = await Address.getAddressById(id);
+
+      if (!address) return next(new AppError("Address not found", 400));
+      address = { ...address, ...editedaddress };
+      await address.save();
+      res.json({
+        message: "Success",
+        address,
+      });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
 }
 
 module.exports = userController;
