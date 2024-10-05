@@ -13,6 +13,7 @@ const { secretAccessToken, secretRefreshToken } = require("../../../configs/env_
 const { setCookie } = require("../utils");
 const upload = require("../../../configs/cloudinary");
 const Order = require("../database/order");
+const Address = require("../database/address");
 
 class userController {
   // auht with google oauth20 callback url
@@ -311,6 +312,24 @@ class userController {
           message: "User has no stores",
         });
       }
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
+
+  // add address
+  static addAddress = catchFunc(async (req, res, next) => {
+    try {
+      const { userId } = req;
+      const { province, township, city, details } = req.body;
+
+      const newAddress = { user: userId, province, township, city, details };
+
+      const address = Address.addAddress(newAddress);
+
+      res.json({
+        message: "Success",
+      });
     } catch (error) {
       next(new AppError(error.message, 500));
     }

@@ -16,7 +16,6 @@ const userSchema = mongoose.Schema(
       default: "user",
       enum: ["user", "admin", "seller"],
     },
-    address: [{ type: mongoose.Types.ObjectId, ref: "Address" }],
     hasStore: { type: Boolean, default: false },
     stores: [{ type: mongoose.Types.ObjectId, ref: "Store" }],
     favorites: [{ type: mongoose.Types.ObjectId, ref: "Product" }],

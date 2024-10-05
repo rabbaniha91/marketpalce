@@ -40,10 +40,10 @@ router.get("/orders", userController.orders);
 router.get("/favorites", userController.favorites);
 
 // become a seller
-router.patch("/become_seller/:storeId");
+router.patch("/become_seller/:storeId", userController.addStore);
 
 // gets user stores
-router.get("/stores");
+router.get("/stores", userController.getStores);
 
 // delete user
 router.delete("/delete_user");
