@@ -58,6 +58,6 @@ router.put("/edit_address/:id", userController.editAddress);
 router.delete("/delete_address/:id", userController.deleteAddress);
 
 // logout
-router.get("/logout");
+router.get("/logout", userController.logout);
 
 module.exports = router;

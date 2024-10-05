@@ -372,6 +372,34 @@ class userController {
       next(error.message, 500);
     }
   });
+
+  // logout user
+  static logout = catchFunc(async (req, res, next) => {
+    try {
+      const cookies = req.cookies;
+      if (!cookies?.jwt) return res.sendStatus(204);
+      const user = await User.getUserByToken(cookies?.jwt);
+
+      if (!user) {
+        res.clearCookie("jwt", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "None",
+        });
+
+        return res.sendStatus(204);
+      }
+      user.refreshTokens = user.refreshTokens.filter((rt) => {
+        return rt !== cookies?.jwt;
+      });
+
+      await user.save();
+
+      res.sendStatus(204);
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
 }
 
 module.exports = userController;
