@@ -281,6 +281,20 @@ class userController {
       next(new AppError(error.message, 500));
     }
   });
+
+  // add store to user
+  static addStore = catchFunc(async (req, res, next) => {
+    try {
+      const { userId } = req;
+      const { storeId } = req.params;
+      await User.addStore(userId, storeId);
+      res.json({
+        message: "Success",
+      });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
 }
 
 module.exports = userController;

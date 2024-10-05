@@ -34,13 +34,13 @@ router.put("/update_user", updateValidator(), userController.update);
 router.patch("/password", checkStrongPassword(), userController.updatePassword);
 
 // get orders history
-router.get("/orders");
+router.get("/orders", userController.orders);
 
 // get user favorites
-router.get("/favorites");
+router.get("/favorites", userController.favorites);
 
 // become a seller
-router.patch("/become_seller");
+router.patch("/become_seller/:storeId");
 
 // gets user stores
 router.get("/stores");

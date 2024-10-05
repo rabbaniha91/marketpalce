@@ -29,30 +29,15 @@ class User {
   }
 
   static async createPassword(id, password) {
-    try {
-      await UserModel.findByIdAndUpdate(id, { password });
-      return true;
-    } catch (error) {
-      new AppError(error.message, 500);
-    }
+    return await UserModel.findByIdAndUpdate(id, { password }, { new: true });
   }
 
   static async changeEmail(id, email) {
-    try {
-      await UserModel.findByIdAndUpdate(id, { email });
-      return true;
-    } catch (error) {
-      new AppError(error.message, 500);
-    }
+    return await UserModel.findByIdAndUpdate(id, { email }, { new: true });
   }
 
   static async updateProfilePicture(id, profilePicture) {
-    try {
-      await UserModel.findByIdAndUpdate(id, { profilePicture });
-      return true;
-    } catch (error) {
-      new AppError(error.message, 500);
-    }
+    return await UserModel.findByIdAndUpdate(id, { profilePicture }, { new: true });
   }
 
   static async getUserFavorites(id) {
@@ -60,6 +45,19 @@ class User {
       path: "favorites",
       select: "title price",
     });
+  }
+
+  static async addStore(userId, storeId) {
+    return await UserModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        hasStore: true,
+        $push: {
+          stores: storeId,
+        },
+      },
+      { new: true }
+    );
   }
 }
 
