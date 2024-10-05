@@ -267,6 +267,20 @@ class userController {
       next(new AppError(error.message, 500));
     }
   });
+
+  // get users favorites
+  static favorites = catchFunc(async (req, res, next) => {
+    try {
+      const { userId } = req;
+      const favorites = await User.getUserFavorites(userId);
+      res.json({
+        message: "Success",
+        favorites,
+      });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
 }
 
 module.exports = userController;

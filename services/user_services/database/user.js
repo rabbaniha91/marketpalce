@@ -36,6 +36,7 @@ class User {
       new AppError(error.message, 500);
     }
   }
+
   static async changeEmail(id, email) {
     try {
       await UserModel.findByIdAndUpdate(id, { email });
@@ -52,6 +53,13 @@ class User {
     } catch (error) {
       new AppError(error.message, 500);
     }
+  }
+
+  static async getUserFavorites(id) {
+    return await UserModel.findById(id).select("favorites").populdate({
+      path: "favorites",
+      select: "title price",
+    });
   }
 }
 
