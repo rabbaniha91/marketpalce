@@ -9,9 +9,8 @@ class Store {
     }).save();
   }
   // search for stores based on title
-  static async getStoresWithSearch(query) {
-    const regex = new RegExp(query, "ig");
-    return await StoreModel.find({ title: regex }, "title logo category averageRating").exec();
+  static async getStoresWithSearch(query, limit) {
+    return await StoreModel.find(query, "title logo category averageRating").limit(limit).exec();
   }
   // search for stores based on category
   static async getStoresWithCategory(category, limit) {

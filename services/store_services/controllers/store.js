@@ -32,6 +32,37 @@ class StoreController {
       next(new AppError(error.message, 500));
     }
   });
+
+  static fetchStoresBySearch = catchFunc(async (req, res, next) => {
+    try {
+      const { searchQuery, cursor, limit } = req.query;
+
+      if (!searchQuery) return next(new AppError("Missing search query", 400));
+
+      let query = {};
+      if (cursor) {
+        query._id = { $gt: cursor };
+      }
+
+      const regexSearchQuery = new RegExp(searchQuery, "ig");
+      query.title = regexSearchQuery;
+      const stores = await Store.getStoresWithSearch(query, limit);
+
+      if (!stores || stores.length === 0) return next("Not any stores with this title", 400);
+
+      const prevCursor = cursor && stores.length > 0 ? stores[0]._id : null;
+      const nextCursor = stores.length > 0 ? stores[stores.length - 1]._id : null;
+
+      res.json({
+        message: "Success",
+        stores,
+        prevCursor,
+        nextCursor,
+      });
+    } catch (error) {
+      next(new AppError(error.message, 500));
+    }
+  });
 }
 
 module.exports = StoreController;
