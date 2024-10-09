@@ -4,11 +4,13 @@ const storeSchema = mongoose.Schema(
   {
     title: { type: String, required: true, text: true }, // عنوان فروشگاه
     description: { type: String }, // توضیحات فروشگاه
+    category: { type: String },
     logo: { type: String }, // لوگوی فروشگاه
     banner: { type: String }, // بنر فروشگاه
     createdBy: { type: mongoose.Types.ObjectId, ref: "User", required: true }, // صاحب فروشگاه
-    videos: [{ type: String }], // ویدیوهای معرفی
+    videos: [{ id: { type: String, unique: true }, url: { type: String }, title: { type: String } }], // ویدیوهای معرفی
     followers: [{ type: mongoose.Types.ObjectId, ref: "User" }], // دنبال‌کنندگان فروشگاه
+    visibility: { type: Boolean, default: true },
     ratings: [
       {
         user: { type: mongoose.Types.ObjectId, ref: "User" }, // کاربری که امتیاز داده
@@ -26,6 +28,17 @@ const storeSchema = mongoose.Schema(
   },
   { timestamps: true } // فعال‌سازی زمان‌های ایجاد و به‌روزرسانی
 );
+
+storeSchema.pre("findOneAndUpate", async (next) => {
+  const update = this.getUpdate();
+  if (update.ratings) {
+    const ratings = update.ratings;
+    const totalRating = ratings.reduce((acc, rating) => acc + rating.rate, 0);
+    const averageRating = (totalRating / ratings.length).toFixed(2);
+    this.set({ averageRating });
+  }
+  next();
+});
 
 const Store = mongoose.model("Store", storeSchema);
 module.exports = Store;

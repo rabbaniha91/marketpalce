@@ -2,17 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-// send store page
-router.get("/store_page");
-
 // get a single store
 router.get("/get/:id");
 
 // get all store
 router.get("/get_all");
-
-// check the user is authenticated
-// router.use(authenticate);
 
 // add a store
 router.post("/add");
@@ -48,13 +42,16 @@ router.patch("/description");
 router.post("/add_video");
 
 // remove video
-router.delete("/remove_video/:title");
+router.patch("/remove_video/:id");
 
 // create festival
 router.post("/festival");
 
 // get all orders based on store id
 router.get("/orders/:storeId");
+
+// rate to store
+router.patch("/rate")
 
 // delete store
 router.delete("/delete/:id");
