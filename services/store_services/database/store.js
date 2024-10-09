@@ -14,14 +14,15 @@ class Store {
     return await StoreModel.find({ title: regex }, "title logo category averageRating").exec();
   }
   // search for stores based on category
-  static async getStoresWithCategory(category, skip) {
+  static async getStoresWithCategory(category, limit) {
     return await StoreModel.find(
       {
         category,
       },
-      "title logo category averageRating",
-      { skip }
-    ).exec();
+      "title logo category averageRating"
+    )
+      .limit(limit)
+      .exec();
   }
   // find the store with id
   static async getStoreById(id) {
