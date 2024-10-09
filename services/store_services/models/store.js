@@ -17,7 +17,7 @@ const storeSchema = mongoose.Schema(
         rate: { type: Number, default: 0, min: 1, max: 5 }, // امتیاز بین 1 تا 5
       },
     ],
-    averageRating: { type: Number, default: 0 }, // میانگین امتیازات
+    averageRating: { rates: { type: Number, default: 0 }, counts: { type: Number, default: 0 } }, // میانگین امتیازات
 
     // فیلدهای آماری
     totalSales: { type: Number, default: 0 }, // تعداد کل فروش‌ها
@@ -29,13 +29,13 @@ const storeSchema = mongoose.Schema(
   { timestamps: true } // فعال‌سازی زمان‌های ایجاد و به‌روزرسانی
 );
 
-storeSchema.pre("findOneAndUpate", async (next) => {
-  const update = this.getUpdate();
+storeSchema.pre("findOneAndUpdate", async (next) => {
+  const update = this.getUpdate(); // `this` به document مربوط می‌شود
   if (update.ratings) {
     const ratings = update.ratings;
     const totalRating = ratings.reduce((acc, rating) => acc + rating.rate, 0);
     const averageRating = (totalRating / ratings.length).toFixed(2);
-    this.set({ averageRating });
+    this.set({ averageRating: { rates: averageRating, counts: ratings.length } });
   }
   next();
 });
